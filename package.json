@@ -5,11 +5,11 @@
   "main": "src/index.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nwesthoff/data-wrangler-ui.git"
+    "url": "git+https://github.com/nwesthoff/object-wrangler-ui.git"
   },
   "author": "Nils Westhoff<nils@nilswesthoff.com>",
   "license": "ISC",
-  "homepage": "https://github.com/nwesthoff/data-wrangler-ui#readme",
+  "homepage": "https://github.com/nwesthoff/object-wrangler-ui#readme",
   "scripts": {
     "dev": "next",
     "build": "next build",
