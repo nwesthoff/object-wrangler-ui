@@ -5,14 +5,14 @@ import { useDebounce } from "use-debounce";
 import ByteCount from "../components/ByteCount";
 import Input from "../components/Input";
 import { useWorker, WORKER_STATUS } from "@koale/useworker";
-import { extendedPick } from "../utils/extendedPick";
+import { recursivePick } from "../workers/extendedPick";
 
 type Props = {};
 
 export default function ObjectScanPage({}: Props) {
   const router = useRouter();
   const [urlInput, setUrlInput] = useState("");
-  const [sortWorker, { status: workerStatus }] = useWorker(extendedPick, {
+  const [sortWorker, { status: workerStatus }] = useWorker(recursivePick, {
     autoTerminate: true,
     remoteDependencies: [
       "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js",
@@ -37,10 +37,8 @@ export default function ObjectScanPage({}: Props) {
         JSON.parse(debouncedScanString)
       );
 
-      console.log(res);
       return res;
     } catch (e) {
-      console.log(e);
       setError(e);
       return null;
     }
