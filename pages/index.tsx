@@ -65,7 +65,7 @@ export default function ObjectScanPage({}: Props) {
   }, [router.isReady]);
 
   const selectedInputData =
-    debouncedStartKeyInput !== ""
+    debouncedStartKeyInput && debouncedStartKeyInput !== ""
       ? inputData[debouncedStartKeyInput]
       : inputData;
 
