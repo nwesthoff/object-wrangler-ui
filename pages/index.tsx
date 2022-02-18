@@ -64,43 +64,65 @@ export default function ObjectScanPage({}: Props) {
     }
   }, [router.isReady]);
 
+  const selectedInputData =
+    debouncedStartKeyInput !== ""
+      ? inputData[debouncedStartKeyInput]
+      : inputData;
+
   return (
     <div>
       <div
         style={{
           top: 0,
           position: "sticky",
-          padding: 12,
           zIndex: 5,
           width: "100%",
           background: "lightgrey",
-          display: "flex",
         }}
       >
-        <Input
-          label="Data URL"
-          value={urlInput}
-          onChange={(e) => setUrlInput(e.currentTarget.value)}
-        />
-
-        <Input
-          label="Start From Key"
-          value={startKeyInput}
-          onChange={(e) => setStartKeyInput(e.currentTarget.value)}
-        />
-
-        <Input
-          label="Scan String"
-          type="text"
-          value={scanString}
-          onChange={(e) => {
-            try {
-              setScanString(e.currentTarget.value);
-            } catch (e) {
-              setError(e);
-            }
+        <div
+          style={{
+            display: "flex",
+            padding: 12,
+            width: "100%",
           }}
-        />
+        >
+          <Input
+            label="Data URL"
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.currentTarget.value)}
+          />
+
+          <Input
+            label="Start From Key"
+            value={startKeyInput}
+            onChange={(e) => setStartKeyInput(e.currentTarget.value)}
+          />
+
+          <Input
+            label="Scan String"
+            type="text"
+            value={scanString}
+            onChange={(e) => {
+              try {
+                setScanString(e.currentTarget.value);
+              } catch (e) {
+                setError(e);
+              }
+            }}
+          />
+        </div>
+
+        <div style={{ width: "100%", position: "relative" }}>
+          {inputData && <ByteCount input={inputData} />}
+          {outputData && (
+            <ByteCount
+              input={inputData}
+              style={{ right: 0 }}
+              output={outputData}
+            />
+          )}
+        </div>
 
         {error && (
           <div
@@ -120,8 +142,15 @@ export default function ObjectScanPage({}: Props) {
       </div>
       <div style={{ display: "flex" }}>
         <div style={{ width: "50%", position: "relative", overflow: "auto" }}>
-          {inputData && <ByteCount input={inputData} />}
-          {inputData && <FormatJSON input={inputData} />}
+          {selectedInputData && (
+            <FormatJSON
+              input={
+                Array.isArray(selectedInputData)
+                  ? selectedInputData.slice(0, 3)
+                  : selectedInputData
+              }
+            />
+          )}
         </div>
         <div
           style={{
@@ -131,8 +160,6 @@ export default function ObjectScanPage({}: Props) {
             background: !outputData ? "pink" : "none",
           }}
         >
-          {outputData && <ByteCount input={outputData} style={{ right: 0 }} />}
-
           {(outputData || inputData) && (
             <FormatJSON input={outputData || inputData} />
           )}
