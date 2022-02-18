@@ -17,6 +17,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@koale/useworker": "^4.0.2",
     "lodash-es": "^4.17.21",
     "next": "latest",
     "react": "^17.0.2",

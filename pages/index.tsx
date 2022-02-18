@@ -4,6 +4,7 @@ import FormatJSON from "../components/HighlightJson";
 import { useDebounce } from "use-debounce";
 import ByteCount from "../components/ByteCount";
 import Input from "../components/Input";
+import { useWorker, WORKER_STATUS } from "@koale/useworker";
 import { extendedPick } from "../utils/extendedPick";
 
 type Props = {};
@@ -11,6 +12,12 @@ type Props = {};
 export default function ObjectScanPage({}: Props) {
   const router = useRouter();
   const [urlInput, setUrlInput] = useState("");
+  const [sortWorker, { status: workerStatus }] = useWorker(extendedPick, {
+    autoTerminate: true,
+    remoteDependencies: [
+      "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js",
+    ],
+  });
   const [inputData, setInputData] = useState(null);
   const [error, setError] = useState<Error>(null);
   const [startKeyInput, setStartKeyInput] = useState("");
@@ -20,16 +27,20 @@ export default function ObjectScanPage({}: Props) {
   const [debouncedScanString] = useDebounce(scanString, 500);
   const [debouncedStartKeyInput] = useDebounce(startKeyInput, 500);
 
-  const outputData = useMemo(() => {
+  const outputData = useMemo(async () => {
     try {
       setError(null);
       if (!inputData) return null;
 
-      return extendedPick(
+      const res = await sortWorker(
         inputData[debouncedStartKeyInput],
         JSON.parse(debouncedScanString)
       );
+
+      console.log(res);
+      return res;
     } catch (e) {
+      console.log(e);
       setError(e);
       return null;
     }
@@ -129,6 +140,7 @@ export default function ObjectScanPage({}: Props) {
             overflow: "auto",
             position: "relative",
             background: !outputData ? "pink" : "none",
+            opacity: workerStatus === WORKER_STATUS.PENDING ? 0.5 : 1,
           }}
         >
           {outputData && <ByteCount input={outputData} style={{ right: 0 }} />}
