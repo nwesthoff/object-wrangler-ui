@@ -96,6 +96,11 @@ export default function ObjectScanPage({}: Props) {
           <Input
             label="Start From Key"
             value={startKeyInput}
+            wrapperProps={{
+              style: {
+                maxWidth: "120px",
+              },
+            }}
             onChange={(e) => setStartKeyInput(e.currentTarget.value)}
           />
 
